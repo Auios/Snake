@@ -10,6 +10,7 @@ type Snake
     declare sub update()
     declare sub render()
     declare sub setSize(w as integer, h as integer)
+    declare sub setPosition(x as integer, y as integer)
     declare sub eatFood()
 end type
 
@@ -32,13 +33,18 @@ sub Snake.update()
 end sub
 
 sub Snake.render()
-    line(this.position.x, this.position.y)-(this.position.x+this.scale.x, this.position.y+this.scale.y),rgb(37, 209, 49),b
-    line(this.position.x, this.position.y)-(this.position.x+this.scale.x, this.position.y+this.scale.y),rgb(218, 232, 219),bf
+    line(this.position.x*this.scale.x, this.position.y*this.scale.y)-(this.position.x*this.scale.x+this.scale.x, this.position.y*this.scale.y+this.scale.y),rgb(218, 232, 219),bf
+    line(this.position.x*this.scale.x, this.position.y*this.scale.y)-(this.position.x*this.scale.x+this.scale.x, this.position.y*this.scale.y+this.scale.y),rgb(37, 209, 49),b
 end sub
 
 sub Snake.setSize(w as integer, h as integer)
     this.scale.x = w
     this.scale.y = h
+end sub
+
+sub Snake.setPosition(x as integer, y as integer)
+    this.position.x = x
+    this.position.y = y
 end sub
 
 sub Snake.eatFood()
