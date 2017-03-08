@@ -1,8 +1,8 @@
 #include "fbgfx.bi"
 #include "aulib.bi"
 
-#include "Snake.bas"
-#include "Food.bas"
+#include "snake.bas"
+#include "food.bas"
 
 using fb, aulib
 
@@ -10,38 +10,71 @@ randomize(timer())
 
 'Application window
 dim shared as AuWindow wnd
-wnd = AuWindowInit(800, 600, 32, 1, 0, "Snake by Auios")
+wnd = AuWindowInit(800, 600, 32, 1, 0, "Snake - by Auios")
 
 'Globals
-dim shared as boolean runApp = true
-dim shared as string k
-const col_size = 8
-const row_size = 8
-dim shared as integer cols,rows
-cols = wnd.wdth/col_size
-rows = wnd.hght/row_size
+dim as boolean runApp = true
+dim as string k
+dim as integer cols = 32
+dim as integer rows = 24
+dim as integer col_size = wnd.wdth/cols
+dim as integer row_size = wnd.hght/rows
+const updateSpeed = 0.3
+dim shared as double lastUpdateTime
+lastUpdateTime = timer()
+
+'Declares
+declare function snakeFoodCheck(s as Snake, f as Food) as boolean
 
 'Snake setup
 dim as Snake s
 s.setSize(col_size, row_size)
-s.setPosition(int(cols*rnd()), int(rows*rnd()))
+s.setPosition(int((cols-1)*rnd()), int((rows-1)*rnd()))
+
+'Food setup
+dim as Food f
+f.setSize(col_size, row_size)
+f.setPosition(int((cols-1)*rnd()), int((rows-1)*rnd()))
 
 'Create window
 AuWindowCreate(wnd)
 
 'Main game loop
 do
+    'Input
     k = inkey()
     if(k = chr(27)) then runApp = false
+    if(multikey(sc_w)) then s.changeDirection(0)
+    if(multikey(sc_s)) then s.changeDirection(1)
+    if(multikey(sc_a)) then s.changeDirection(2)
+    if(multikey(sc_d)) then s.changeDirection(3)
     
-    s.update()
+    'Update
+    if((timer() - lastUpdateTime) > updateSpeed) then
+        s.update()
+        if(snakeFoodCheck(s, f)) then 
+            s.eatFood()
+            f.setPosition(int((cols-1)*rnd()), int((rows-1)*rnd()))
+        end if
+        lastUpdateTime = timer()
+    end if
     
+    'Render
     screenLock()
         cls()
+        line(0,0)-(wnd.wdth,wnd.hght),rgb(150,150,150),bf
         s.render()
+        f.render()
     screenUnlock
     
-    sleep(250,1)
+    sleep(1,1)
 loop until(runApp = false)
 
 AuWindowDestroy(wnd)
+
+'---------------------------
+function snakeFoodCheck(s as Snake, f as Food) as boolean
+    dim as boolean retVal = false
+    if(s.position.x = f.position.x AND s.position.y = f.position.y) then retVal = true
+    return retVal
+end function
