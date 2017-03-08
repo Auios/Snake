@@ -27,7 +27,7 @@ lastUpdateTime = timer()
 declare function snakeFoodCheck(s as Snake, f as Food) as boolean
 
 'Snake setup
-dim as Snake s
+dim as Snake s = Snake(cols, rows)
 s.setSize(col_size, row_size)
 s.setPosition(int((cols-1)*rnd()), int((rows-1)*rnd()))
 
@@ -65,6 +65,8 @@ do
         line(0,0)-(wnd.wdth,wnd.hght),rgb(150,150,150),bf
         s.render()
         f.render()
+        
+        draw string(5,5), "Score: " & s.length
     screenUnlock
     
     sleep(1,1)
