@@ -15,11 +15,11 @@ wnd = AuWindowInit(800, 600, 32, 1, 0, "Snake - by Auios")
 'Globals
 dim as boolean runApp = true
 dim as string k
-dim as integer cols = 32
-dim as integer rows = 24
+dim as integer cols = 24
+dim as integer rows = 20
 dim as integer col_size = wnd.wdth/cols
 dim as integer row_size = wnd.hght/rows
-const updateSpeed = 0.3
+const updateSpeed = 0.1
 dim shared as double lastUpdateTime
 lastUpdateTime = timer()
 
@@ -62,7 +62,8 @@ do
     'Render
     screenLock()
         cls()
-        line(0,0)-(wnd.wdth,wnd.hght),rgb(150,150,150),bf
+        
+        line(0,0)-(wnd.wdth,wnd.hght),rgb(75,75,75),bf
         s.render()
         f.render()
         
